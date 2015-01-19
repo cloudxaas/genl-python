@@ -65,18 +65,13 @@ def NLATTR_DATA(buf) :
 
 class nlmsghdr:
 
-        nlm_len  = 0          #u32
-        nlm_type = 0          #u16
-        nlm_flags = 0         #u16
-        nlm_seq = 0           #u32
-        nlm_pid = os.getpid()     #u32
-
         def __init__(self, msg_len = 0, msg_type = 0, msg_flags = 0, msg_seq = 0) :
 
-                self.nlm_len = msg_len
-                self.nlm_type = msg_type
-                self.nlm_flags = msg_flags
-                self.nlm_seq = msg_seq
+                self.nlm_len = msg_len          #u32
+                self.nlm_type = msg_type        #u16
+                self.nlm_flags = msg_flags      #u16
+                self.nlm_seq = msg_seq          #u32
+                self.nlm_pid = os.getpid()      #u32
 
         def pack(self) :
 
@@ -92,13 +87,11 @@ class nlmsghdr:
 
 class gnlmsghdr:
 
-        cmd = 0         #u8               
-        version = 0x1   #u8
-        reserved = 0    #u16
-
         def __init__(self, msg_cmd = 0) :
 
-                self.cmd = msg_cmd
+                self.cmd = msg_cmd      #u8
+                self.version = 0x1      #u8
+                self.reserved = 0       #u16
 
         def pack(self) :
 
@@ -114,20 +107,13 @@ class gnlmsghdr:
 
 class nlattr:
 
-        nla_len = 0     #u16
-        nla_type = 0    #u16
-
-        nla_data = 0
-
-        data_len = 0    #no (un)packing
-
         def __init__(self, nla_type = 0, nla_data = None, data_len = 0) :
 
-                self.nla_type = nla_type
+                self.nla_type = nla_type                        #u16
                 self.nla_data = nla_data
-                self.data_len = data_len
+                self.data_len = data_len                        #no (un)packing
 
-                self.nla_len = NLA_HDRLEN + self.data_len
+                self.nla_len = NLA_HDRLEN + self.data_len       #u16
 
         def pack(self) :
                 if self.nla_data != None :
@@ -298,14 +284,10 @@ class gnlpacket :
 
 class genl_conn :
 
-        sock = None
-
-        family = ""
-
-        famid = -1
-
         def __init__(self, family) :
                 self.family = family
+                self.sock = None
+                self.famid = -1
 
         def connect(self) :
                 self.sock = socket.socket(socket.AF_NETLINK, socket.SOCK_RAW, NETLINK_GENERIC)
